@@ -18,4 +18,8 @@ public class TemplateController {
         return "courses";
     }
 
+//    @GetMapping("sign-up")
+//    public String getSignUpPage() {
+//        return "sign-up";
+//    }
 }
