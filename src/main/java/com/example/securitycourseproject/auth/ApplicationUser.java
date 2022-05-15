@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity(name = "ApplicationUser")
 @Table(name = "ApplicationUser",
         uniqueConstraints = {
-            @UniqueConstraint(name = "username_unique", columnNames = "username")
+                @UniqueConstraint(name = "username_unique", columnNames = "username")
         }
 )
 public class ApplicationUser implements UserDetails {
@@ -110,7 +110,7 @@ public class ApplicationUser implements UserDetails {
 
     private <T> ArrayList<T> convertToArrayList(Set<T> authorities) {
         ArrayList<T> s = new ArrayList<>();
-        for (T auth:authorities)
+        for (T auth : authorities)
             s.add(auth);
 
         return s;
