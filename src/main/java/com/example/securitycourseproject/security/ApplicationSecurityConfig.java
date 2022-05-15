@@ -1,8 +1,11 @@
 package com.example.securitycourseproject.security;
 
 
+import com.example.securitycourseproject.auth.ApplicationUser;
+import com.example.securitycourseproject.auth.ApplicationUserPostgresRepository;
 import com.example.securitycourseproject.auth.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,13 +30,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
-//    private final ApplicationUserPostgresRepository applicationUserPostgresRepository;
+    private final ApplicationUserPostgresRepository applicationUserPostgresRepository;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
+                                     ApplicationUserService applicationUserService,
+                                     ApplicationUserPostgresRepository applicationUserPostgresRepository) {
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
-//        this.applicationUserPostgresRepository = applicationUserPostgresRepository;
+        this.applicationUserPostgresRepository = applicationUserPostgresRepository;
     }
 
 
@@ -69,6 +74,41 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .deleteCookies("remember-me", "JSESSIONID")
                     .logoutSuccessUrl("/login");
+    }
+
+    @Bean
+    CommandLineRunner commandLineRunner() {
+        return args -> {
+
+            ApplicationUser anna = new ApplicationUser("anna",
+                    passwordEncoder.encode("password"),
+                    STUDENT.getGrantedAuthorities(),
+                    true,
+                    true,
+                    true,
+                    true
+            );
+            ApplicationUser linda = new ApplicationUser("linda",
+                    passwordEncoder.encode("password2"),
+                    ADMIN.getGrantedAuthorities(),
+                    true,
+                    true,
+                    true,
+                    true
+            );
+            ApplicationUser tom = new ApplicationUser("tom",
+                    passwordEncoder.encode("password2"),
+                    ADMINTRAINEE.getGrantedAuthorities(),
+                    true,
+                    true,
+                    true,
+                    true
+            );
+
+            applicationUserPostgresRepository.save(anna);
+            applicationUserPostgresRepository.save(linda);
+            applicationUserPostgresRepository.save(tom);
+        };
     }
 
     @Override
