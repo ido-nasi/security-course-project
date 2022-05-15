@@ -3,7 +3,6 @@ package com.example.securitycourseproject.security;
 
 import com.example.securitycourseproject.auth.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,11 +27,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
+//    private final ApplicationUserPostgresRepository applicationUserPostgresRepository;
 
     @Autowired
     public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
+//        this.applicationUserPostgresRepository = applicationUserPostgresRepository;
     }
 
 
@@ -57,6 +58,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) // defaults to 2 weeks
                     .key("somethingverysecure")
+                    .userDetailsService(applicationUserService)
                     .rememberMeParameter("remember-me")
                 .and()
                 .logout()
@@ -81,5 +83,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(applicationUserService);
         return provider;
     }
+
 
 }
