@@ -76,40 +76,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/login");
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner() {
-        return args -> {
-
-            ApplicationUser anna = new ApplicationUser("anna",
-                    passwordEncoder.encode("password"),
-                    STUDENT.getGrantedAuthorities(),
-                    true,
-                    true,
-                    true,
-                    true
-            );
-            ApplicationUser linda = new ApplicationUser("linda",
-                    passwordEncoder.encode("password2"),
-                    ADMIN.getGrantedAuthorities(),
-                    true,
-                    true,
-                    true,
-                    true
-            );
-            ApplicationUser tom = new ApplicationUser("tom",
-                    passwordEncoder.encode("password2"),
-                    ADMINTRAINEE.getGrantedAuthorities(),
-                    true,
-                    true,
-                    true,
-                    true
-            );
-
-            applicationUserPostgresRepository.save(anna);
-            applicationUserPostgresRepository.save(linda);
-            applicationUserPostgresRepository.save(tom);
-        };
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
