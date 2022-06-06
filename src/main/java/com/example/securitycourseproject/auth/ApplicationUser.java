@@ -3,47 +3,19 @@ package com.example.securitycourseproject.auth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-@Entity(name = "ApplicationUser")
-@Table(name = "ApplicationUser",
-        uniqueConstraints = {
-            @UniqueConstraint(name = "username_unique", columnNames = "username")
-        }
-)
+
 public class ApplicationUser implements UserDetails {
 
-    @Id
-    @Column(name = "username")
     private final String username;
-
-    @Column(name = "password")
     private final String password;
-
-    @Column(name = "authorities")
-    private final ArrayList<? extends GrantedAuthority> grantedAuthorities;
-
-    @Column(name = "isAccountNonExpired",
-            columnDefinition = "BOOLEAN"
-    )
+    private final Set<? extends GrantedAuthority> grantedAuthorities;
     private final boolean isAccountNonExpired;
-
-    @Column(name = "isAccountNonLocked",
-            columnDefinition = "BOOLEAN"
-    )
     private final boolean isAccountNonLocked;
-
-    @Column(name = "isCredentialsNonExpired",
-            columnDefinition = "BOOLEAN"
-    )
     private final boolean isCredentialsNonExpired;
-
-    @Column(name = "isEnabled",
-            columnDefinition = "BOOLEAN"
-    )
     private final boolean isEnabled;
 
 
@@ -54,23 +26,13 @@ public class ApplicationUser implements UserDetails {
                            boolean isAccountNonLocked,
                            boolean isCredentialsNonExpired,
                            boolean isEnabled) {
-        this.grantedAuthorities = convertToArrayList(grantedAuthorities);
+        this.grantedAuthorities = grantedAuthorities;
         this.password = password;
         this.username = username;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
-    }
-
-    public ApplicationUser() {
-        this.grantedAuthorities = null;
-        this.password = null;
-        this.username = null;
-        this.isAccountNonExpired = false;
-        this.isAccountNonLocked = false;
-        this.isCredentialsNonExpired = false;
-        this.isEnabled = false;
     }
 
     @Override
@@ -106,14 +68,6 @@ public class ApplicationUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    private <T> ArrayList<T> convertToArrayList(Set<T> authorities) {
-        ArrayList<T> s = new ArrayList<>();
-        for (T auth:authorities)
-            s.add(auth);
-
-        return s;
     }
 
 }
